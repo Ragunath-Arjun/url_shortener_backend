@@ -20,7 +20,7 @@ const forgotpassword = async (req, res) => {
     if (user) {
       //generate random string
       let randomString = randomstring.generate();
-
+      console.log(randomString);
       //send a mail using nodemailer
       //Create Transporter
       let transporter = nodemailer.createTransport({
@@ -53,17 +53,15 @@ const forgotpassword = async (req, res) => {
       const expiresin = new Date();
       expiresin.setHours(expiresin.getHours() + 1);
       //store random string
-      await db
-        .collection("users")
-        .findOneAndUpdate(
-          { email: req.body.email },
-          {
-            $set: {
-              resetPasswordToken: randomString,
-              resetPasswordExpires: expiresin,
-            },
-          }
-        );
+      await db.collection("users").findOneAndUpdate(
+        { email: req.body.email },
+        {
+          $set: {
+            resetPasswordToken: randomString,
+            resetPasswordExpires: expiresin,
+          },
+        }
+      );
       //Close the connection
       await client.close();
       res.json({
