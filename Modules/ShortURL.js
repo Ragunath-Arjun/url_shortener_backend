@@ -11,11 +11,12 @@ const ShortURL = async (req, res) => {
     //Select db
     let db = client.db("Urlshortener");
     //Get all urls for a user
-    let urls = await db
-      .collection("Url")
+    let collection = db.collection("Url");
+
+    let urls = await collection
       .find({ userID: new mongodb.ObjectId(req.body.userid) })
       .toArray();
-    //Close the commection
+    //Close the connection
     await client.close();
     // console.log(urls)
     res.send(urls);
