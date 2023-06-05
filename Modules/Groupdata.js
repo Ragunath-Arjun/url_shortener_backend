@@ -11,8 +11,9 @@ const Groupdata = async (req, res) => {
     //Select db
     let db = client.db("Urlshortener");
     //Get all urls for a user { userID: mongodb.ObjectId(req.body.userid) }
-    let urlsperday = await db
-      .collection("Url")
+    let collection = db.collection("Url");
+
+    let urlsperday = await collection
       .aggregate([
         { $match: { userID: new mongodb.ObjectId(req.body.userid) } },
         {
