@@ -55,7 +55,7 @@ const register = async (req, res) => {
         html: `<h4>Hi ${req.body.firstName},</h4><p>We noticed that you recently created a URLShortener account. Click the below link to activate account.</p><a href="${process.env.FRONTEND_URL}/activate-account?tk=${randomString}">Activate</a>`,
       };
       //Send mail
-      transporter.sendMail(mailOptions, (err, data) => {
+      let info = await transporter.sendMail(mailOptions, (err, data) => {
         if (err) {
           console.log(err);
         } else {

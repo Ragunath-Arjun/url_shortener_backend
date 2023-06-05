@@ -42,7 +42,7 @@ const forgotpassword = async (req, res) => {
         html: `<h4>Hi,</h4><p>We've received a request to reset the password. You can reset the password by clicking the link below.</p><a href="${process.env.FRONTEND_URL}/reset-password?tk=${randomString}">Reset Password</a>`,
       };
       //Send mail
-      transporter.sendMail(mailOptions, (err, data) => {
+      let info = await transporter.sendMail(mailOptions, (err, data) => {
         if (err) {
           console.log(err);
         } else {
