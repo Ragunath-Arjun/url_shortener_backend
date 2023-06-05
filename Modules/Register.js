@@ -37,7 +37,10 @@ const register = async (req, res) => {
       //send a mail using nodemailer
       //Create Transporter
       let transporter = nodemailer.createTransport({
-        service: "gmail",
+        // service: "gmail",
+        host: "smtp.example.com",
+        port: 587,
+        secure: false,
         auth: {
           // type: 'OAUTH2',
           user: process.env.MAIL_USERNAME,
