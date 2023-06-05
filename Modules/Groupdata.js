@@ -1,7 +1,6 @@
 const mongodb = require("mongodb");
-const dotenv = require("dotenv");
-dotenv.config();
 const mongoClient = mongodb.MongoClient;
+const dotenv = require("dotenv").config();
 const MONGO_URL = process.env.MONGO_URL;
 
 const Groupdata = async (req, res) => {
@@ -15,7 +14,7 @@ const Groupdata = async (req, res) => {
 
     let urlsperday = await collection
       .aggregate([
-        { $match: { userID: new mongodb.ObjectId(req.body.userid) } },
+        { $match: { userID: req.body.userid } },
         {
           $group: {
             _id: {
@@ -29,10 +28,11 @@ const Groupdata = async (req, res) => {
         },
       ])
       .toArray();
+    console.log("urlsperday", urlsperday);
     let urlspermonth = await db
       .collection("Url")
       .aggregate([
-        { $match: { userID: new mongodb.ObjectId(req.body.userid) } },
+        { $match: { userID: req.body.userid } },
         {
           $group: {
             _id: {
@@ -46,7 +46,9 @@ const Groupdata = async (req, res) => {
       ])
       .toArray();
     //Close the connection
+    console.log("urlspermonth", urlspermonth);
     await client.close();
+
     res.json({
       urlspermonth,
       urlsperday,

@@ -8,6 +8,7 @@ const activateaccount = async (req, res) => {
   try {
     //Queryvalue
     const requesttoken = req.body.tk;
+    console.log(requesttoken);
     //Initiate connection
     let client = await mongoClient.connect(MONGO_URL);
     //Select db
@@ -16,20 +17,20 @@ const activateaccount = async (req, res) => {
     let user = await db
       .collection("users")
       .findOne({ activateAccountToken: requesttoken });
+    console.log(user);
+
     //if user exists!
     if (user) {
       //Update Password
       let activate = await db
         .collection("users")
-        .findOneAndUpdate(
-          { _id: mongodb.ObjectId(user._id) },
-          { $set: { active: true } }
-        );
+        .findOneAndUpdate({ _id: user._id }, { $set: { active: true } });
+      console.log(activate);
       //Delete random String
       await db
         .collection("users")
         .findOneAndUpdate(
-          { _id: mongodb.ObjectId(user._id) },
+          { _id: user._id },
           { $unset: { activateAccountToken: 1, activateAccountExpires: 1 } }
         );
       res.json({

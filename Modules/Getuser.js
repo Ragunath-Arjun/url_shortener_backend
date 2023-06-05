@@ -14,7 +14,7 @@ const getUser = async (req, res) => {
     //Check user exists
     let user = await db
       .collection("users")
-      .find({ _id: mongodb.ObjectId(req.body.userid) })
+      .find({ _id: new mongodb.ObjectId(req.body.userid) })
       .toArray();
     if (user) {
       res.send(user);

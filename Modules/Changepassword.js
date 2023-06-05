@@ -19,14 +19,14 @@ const changepassword = async (req, res) => {
     let data = await db
       .collection("users")
       .findOneAndUpdate(
-        { _id: mongodb.ObjectId(req.body.userid) },
+        { _id: new mongodb.ObjectId(req.body.userid) },
         { $set: { password: hashedpassword } }
       );
     //Delete random String
     await db
       .collection("users")
       .findOneAndUpdate(
-        { _id: mongodb.ObjectId(req.body.userid) },
+        { _id: new mongodb.ObjectId(req.body.userid) },
         { $unset: { resetPasswordToken: 1, resetPasswordExpires: 1 } }
       );
     await client.close();
