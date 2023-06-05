@@ -13,7 +13,7 @@ const ShortURL = async (req, res) => {
     //Get all urls for a user
     let urls = await db
       .collection("Url")
-      .find({ userID: mongodb.ObjectId(req.body.userid) })
+      .find({ userID: new mongodb.ObjectId(req.body.userid) })
       .toArray();
     //Close the commection
     await client.close();
