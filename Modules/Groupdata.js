@@ -14,7 +14,7 @@ const Groupdata = async (req, res) => {
     let urlsperday = await db
       .collection("Url")
       .aggregate([
-        { $match: { userID: mongodb.ObjectId(req.body.userid) } },
+        { $match: { userID: new mongodb.ObjectId(req.body.userid) } },
         {
           $group: {
             _id: {
@@ -31,7 +31,7 @@ const Groupdata = async (req, res) => {
     let urlspermonth = await db
       .collection("Url")
       .aggregate([
-        { $match: { userID: mongodb.ObjectId(req.body.userid) } },
+        { $match: { userID: new mongodb.ObjectId(req.body.userid) } },
         {
           $group: {
             _id: {
