@@ -14,24 +14,21 @@ const Shortener = async (req, res) => {
       let client = await mongoClient.connect(MONGO_URL);
       //Select db
       let db = client.db("Urlshortener");
+      let collection = db.collection("users");
       //Check for the user
-      let url = await db
-        .collection("Url")
-        .findOne({ originalUrl: originalURL });
+      let url = await collection.findOne({ originalUrl: originalURL });
       if (url) {
         res.send(url);
       } else {
         const shortUrl = `${process.env.BACKEND_URL}/${UrlID}`;
-        let Url = await db
-          .collection("Url")
-          .insertOne({
-            originalUrl: originalURL,
-            shortUrl: shortUrl,
-            UrlID: UrlID,
-            userID: mongodb.ObjectId(req.body.userid),
-            date: new Date(),
-            totalClicks: 0,
-          });
+        let Url = await db.collection("Url").insertOne({
+          originalUrl: originalURL,
+          shortUrl: shortUrl,
+          UrlID: UrlID,
+          userID: new mongodb.ObjectId(req.body.userid),
+          date: new Date(),
+          totalClicks: 0,
+        });
         await client.close();
         res.send(Url);
       }

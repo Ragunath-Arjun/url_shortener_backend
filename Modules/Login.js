@@ -1,10 +1,8 @@
 const mongodb = require("mongodb");
-const dotenv = require("dotenv");
+const mongoClient = mongodb.MongoClient;
+const dotenv = require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-dotenv.config();
-const mongoClient = mongodb.MongoClient;
 const MONGO_URL = process.env.MONGO_URL;
 
 const login = async (req, res) => {
@@ -14,7 +12,8 @@ const login = async (req, res) => {
     //Select db
     let db = client.db("Urlshortener");
     //Check user exists
-    let user = await db.collection("users").findOne({ email: req.body.email });
+    let collection = db.collection("users");
+    let user = await collection.findOne({ email: req.body.email });
     if (user) {
       if (user.active) {
         let matchPassword = bcrypt.compareSync(

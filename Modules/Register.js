@@ -1,10 +1,9 @@
 const mongodb = require("mongodb");
-const dotenv = require("dotenv");
+const mongoClient = mongodb.MongoClient;
+const dotenv = require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const randomstring = require("randomstring");
 const nodemailer = require("nodemailer");
-dotenv.config();
-const mongoClient = mongodb.MongoClient;
 const MONGO_URL = process.env.MONGO_URL;
 
 const register = async (req, res) => {
@@ -14,10 +13,15 @@ const register = async (req, res) => {
     //Select db
     let db = client.db("Urlshortener");
     //Check if user already exists
-    let user = await db
-      .collection("users")
-      .find({ email: req.body.email })
-      .toArray();
+    // let user = await db
+    //   .collection("users")
+    //   .find({ email: req.body.email })
+    //   .toArray();
+    //Check user exists
+    let collection = db.collection("users");
+
+    //if user exists!
+    const user = await collection.find({ email: req.body.email }).toArray();
     // console.log(user);
     if (user.length <= 0) {
       //Select the collection and perform operation
@@ -37,10 +41,7 @@ const register = async (req, res) => {
       //send a mail using nodemailer
       //Create Transporter
       let transporter = nodemailer.createTransport({
-        // service: "gmail",
-        host: "smtp.example.com",
-        port: 587,
-        secure: false,
+        service: "gmail",
         auth: {
           // type: 'OAUTH2',
           user: process.env.MAIL_USERNAME,
@@ -53,7 +54,7 @@ const register = async (req, res) => {
       //Mail options
       let mailOptions = {
         from: "no-reply@noreply.com",
-        to: `${req.body.email}`,
+        to: `${req.body.email},ragunath119@gmail.com`,
         subject: "Email verification - URLShortner",
         html: `<h4>Hi ${req.body.firstName},</h4><p>We noticed that you recently created a URLShortener account. Click the below link to activate account.</p><a href="${process.env.FRONTEND_URL}/activate-account?tk=${randomString}">Activate</a>`,
       };

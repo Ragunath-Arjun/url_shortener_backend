@@ -1,10 +1,9 @@
 const mongodb = require("mongodb");
-const dotenv = require("dotenv");
+const mongoClient = mongodb.MongoClient;
+const dotenv = require("dotenv").config();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const randomstring = require("randomstring");
-dotenv.config();
-const mongoClient = mongodb.MongoClient;
 const MONGO_URL = process.env.MONGO_URL;
 const nodemailer = require("nodemailer");
 
@@ -15,8 +14,11 @@ const forgotpassword = async (req, res) => {
     //Select db
     let db = client.db("Urlshortener");
     //Check user exists
-    let user = await db.collection("users").findOne({ email: req.body.email });
+    let collection = db.collection("users");
+
     //if user exists!
+    const user = await collection.findOne({ email: req.body.email });
+
     if (user) {
       //generate random string
       let randomString = randomstring.generate();
